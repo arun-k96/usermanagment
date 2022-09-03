@@ -13,7 +13,12 @@ router.post('/admin/updateuser/:id',authUser(),authUserRole(['admin']),adminCont
 router.get('/admin/deleteuser/:id',authUser(),authUserRole(['admin']),adminController.deleteuser);
 router.get('/admin/viewuser/:id',authUser(),authUserRole(['admin']),adminController.viewuser);
 
+
 router.get('/admin/templatelist',authUser(),authUserRole(['admin']),adminController.templatelist);
+
+
+
+
 
 
 

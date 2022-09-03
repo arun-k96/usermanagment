@@ -113,6 +113,60 @@ exports.adduser = (req, res) => {
     }
 }
 
+///////////////////
+
+// Display adduser form
+exports.addtemplateform = (req, res) => {
+    session = req.session;
+    // connect to DB
+    pool.getConnection((err, connection) => {
+        if (err) throw err; // not connected
+        console.log('Connected as ID ' + connection.threadId);
+
+        //User the connection
+        connection.query('SELECT * FROM users WHERE id = ?', [session.userid], (err, logineduser, field) => {
+
+            //when done with the connection,release it
+            connection.release();
+
+            if (!err && logineduser.length > 0) {
+                res.render('addtemplate', { loginPage: true, logineduser });
+            }
+        });
+    });
+}
+
+// Add user
+exports.addtemplate = (req, res) => {
+    session = req.session;
+    const { tempname } = req.body;
+    
+
+
+        // connect to DB
+        pool.getConnection((err, connection) => {
+            if (err) throw err; // not connected
+            console.log('Connected as ID ' + connection.threadId);
+
+            //User the connection
+            connection.query('INSERT INTO template_main SET template = ?, status = "active"', [tempname], (err, row) => {
+
+                //when done with the connection,release it
+                connection.release();
+                loginedUser(session, function(logineduser){
+                    if (!err) {
+                        res.render('addtemplate', { loginPage: true, alertcolor: 'success', alert: 'Template added succefully.', logineduser });
+                    } else {
+                        res.render('addtemplate', { loginPage: true, alertcolor: 'danger', alert: 'Check your details.', logineduser });
+                    }
+                });
+            });
+        });
+    
+}
+
+///////////////////
+
 function loginedUser(session, callback){
     // connect to DB
     pool.getConnection((err, connection) => {
